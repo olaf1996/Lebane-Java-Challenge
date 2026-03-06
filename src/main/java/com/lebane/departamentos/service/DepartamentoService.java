@@ -3,6 +3,7 @@ package com.lebane.departamentos.service;
 import com.lebane.departamentos.domain.Departamento;
 import com.lebane.departamentos.dto.DepartamentoRequest;
 import com.lebane.departamentos.dto.DepartamentoResponse;
+import com.lebane.departamentos.exception.DepartamentoNotFoundException;
 import com.lebane.departamentos.mapper.DepartamentoMapper;
 import com.lebane.departamentos.repository.DepartamentoRepository;
 import com.lebane.departamentos.repository.DepartamentoSpecifications;
@@ -37,5 +38,14 @@ public class DepartamentoService {
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    @Transactional
+    public DepartamentoResponse update(Long id, DepartamentoRequest request) {
+        Departamento entity = repository.findById(id)
+                .orElseThrow(() -> new DepartamentoNotFoundException(id));
+        mapper.updateEntity(request, entity);
+        entity = repository.save(entity);
+        return mapper.toResponse(entity);
     }
 }
