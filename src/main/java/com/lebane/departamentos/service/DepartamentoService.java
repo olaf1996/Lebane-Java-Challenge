@@ -5,8 +5,11 @@ import com.lebane.departamentos.dto.DepartamentoRequest;
 import com.lebane.departamentos.dto.DepartamentoResponse;
 import com.lebane.departamentos.mapper.DepartamentoMapper;
 import com.lebane.departamentos.repository.DepartamentoRepository;
+import com.lebane.departamentos.repository.DepartamentoSpecifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Lógica de negocio para departamentos.
@@ -27,5 +30,12 @@ public class DepartamentoService {
         Departamento entity = mapper.toEntity(request);
         entity = repository.save(entity);
         return mapper.toResponse(entity);
+    }
+
+    public List<DepartamentoResponse> list(Boolean disponible, Double precioMin, Double precioMax) {
+        return repository.findAll(DepartamentoSpecifications.withFiltros(disponible, precioMin, precioMax))
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 }

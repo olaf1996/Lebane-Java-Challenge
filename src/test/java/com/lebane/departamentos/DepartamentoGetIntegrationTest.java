@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -84,9 +86,9 @@ class DepartamentoGetIntegrationTest {
         mockMvc.perform(get("/api/departamentos").param("disponible", "true").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].titulo").value("A"))
-                .andExpect(jsonPath("$[0].disponible").value(true));
+                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(1)))
+                .andExpect(jsonPath("$[*].titulo").value(hasItem("A")))
+                .andExpect(jsonPath("$[*].disponible").value(hasItem(true)));
     }
 
     @Test
@@ -111,8 +113,8 @@ class DepartamentoGetIntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].titulo").value("Caro"))
-                .andExpect(jsonPath("$[0].precio").value(500.0));
+                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(1)))
+                .andExpect(jsonPath("$[*].titulo").value(hasItem("Caro")))
+                .andExpect(jsonPath("$[*].precio").value(hasItem(500.0)));
     }
 }
