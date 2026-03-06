@@ -1,0 +1,13 @@
+# Perfil test: H2 en memoria. Permite ejecutar mvn test sin Docker (evita problema de socket docker_cli en Windows).
+spring:
+  datasource:
+    url: jdbc:h2:mem:departamentos_test;DB_CLOSE_DELAY=-1;MODE=LEGACY
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    # Necesario para sobrescribir database-platform de application.yml (PostgreSQL) y evitar SQL de PG contra H2.
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
